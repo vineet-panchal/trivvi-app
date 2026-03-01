@@ -48,6 +48,8 @@ func (a *App) loginHandler(w http.ResponseWriter, r *http.Request) {
 
 // oauth handler, redirect the user to the oatuh provider
 func (a *App) oAuthHandler(w http.ResponseWriter, r *http.Request) {
+	// TODO: change the state value to a random value generated per request
+	// and store it in a cookie, then verify it in the callback to prevent CSRF attacks
 	url := a.config.AuthCodeURL("state", oauth2.AccessTypeOffline)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
@@ -86,7 +88,11 @@ func (a *App) oAuthCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// sending the user public value as a response. This is may not be a good practice,
-	// but for demonstration, I think it serves the need.
+	// TODO: fmt.Fprintf with %v dumps the raw Go map, not JSON.
+	// Replace with json.NewEncoder(w).Encode(v) to return proper JSON.
+	//
+	// TODO: this callback fetches user info but doesn't create a session or JWT,
+	// so the user isn't actually "logged in" after the flow completes.
+	// Issue a JWT here and return it to the client (cookie or response body).
 	fmt.Fprintf(w, "%v", v)
 }

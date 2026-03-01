@@ -30,7 +30,7 @@ func main() {
 	conf := &oauth2.Config{
 		ClientID:     clientid,
 		ClientSecret: clientSecret,
-		RedirectURL:  "", // empty for now but its just the url redirecting the login page of the mobile app
+		RedirectURL:  "", // TODO: must be set (e.g. "http://localhost:8080/auth/callback") or Google will reject the callback
 		Scopes:       []string{"email", "profile"},
 		Endpoint:     google.Endpoint,
 	}
